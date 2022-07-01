@@ -41,7 +41,7 @@ class DateRangeTest extends TestCase
 
     public function testTodayDateRange()
     {
-        $range = DateRange::from('TODAY');
+        $range = DateRange::from('today');
         
         $this->assertEquals(new CarbonInterval('P1D'), $range->interval);
         $this->assertEquals(now()->startOfDay(), $range->start);
@@ -51,7 +51,7 @@ class DateRangeTest extends TestCase
 
     public function testYesterdayDateRange()
     {
-        $range = DateRange::from('YESTERDAY');
+        $range = DateRange::from('yesterday');
         
         $this->assertEquals(new CarbonInterval('P1D'), $range->interval);
         $this->assertEquals(now()->subDay()->startOfDay(), $range->start);

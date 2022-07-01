@@ -6,7 +6,6 @@ use Actengage\Metrics\Contracts\Result as ResultInterface;
 use Actengage\Metrics\Expressions\TrendDateExpressionFactory;
 use Actengage\Metrics\Results\TrendResult;
 use Carbon\Carbon;
-use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use DateTime;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -56,7 +55,7 @@ abstract class Trend extends RangedMetric
         $dateColumn = $dateColumn ?? $query->getModel()->getQualifiedCreatedAtColumn();
         
         $expression = (string) TrendDateExpressionFactory::make(
-            $query, $dateColumn, $unit, $this->getDefaultTimezone()
+            $query, $dateColumn, $unit, $this->timezone
         );
 
         $range = $this->getAggregateRange($unit);
@@ -69,7 +68,9 @@ abstract class Trend extends RangedMetric
                 ->select(DB::raw("{$expression} as date_result, {$function}({$wrappedColumn}) as aggregate"))
                 ->where(function($query) use ($dateColumn, $range) {
                     if($range) {
-                        $query->whereBetween($dateColumn, [$range->start, $range->end]);
+                        $query->whereBetween(
+                            $dateColumn, [$range->start, $range->end]
+                        );
                     }
                 })
                 ->groupBy(DB::raw($expression))
@@ -531,6 +532,10 @@ abstract class Trend extends RangedMetric
         $ranges = collect($this->ranges())->keys()->values()->all();
 
         $range = $this->selectedRangeKey;
+        
+        if(!$range && $this->range) {
+            return $this->range;
+        }
 
         if(count($ranges) > 0 && !in_array($range, $ranges)) {
             $range = min($range ?? max($ranges), max($ranges));

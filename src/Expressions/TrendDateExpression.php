@@ -62,8 +62,8 @@ abstract class TrendDateExpression extends Expression
      */
     public function offset()
     {
-        $timezoneOffset = function ($timezone) {
-            return (new DateTime(CarbonImmutable::now()->format('Y-m-d H:i:s'), new DateTimeZone($timezone)))->getOffset() / 60 / 60;
+        $timezoneOffset = function (DateTimeZone $timezone) {
+            return (new DateTime(CarbonImmutable::now()->format('Y-m-d H:i:s'), $timezone))->getOffset() / 60 / 60;
         };
 
         if ($this->timezone) {

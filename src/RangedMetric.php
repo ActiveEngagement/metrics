@@ -38,13 +38,17 @@ abstract class RangedMetric extends Metric
     /**
      * Set the default range.
      *
-     * @param string|int|null $key
+     * @param \Actengage\Metrics\DateRange|string|int|null $value
      * @return $this
      */
-    public function range(string|int|null $key)
-    {
-        if($this->selectedRangeKey = $key) {
-            $this->range = DateRange::from($key);
+    public function range(DateRange|string|int|null $value)
+    {   
+        if($value instanceof DateRange) {
+            $this->range = $value;
+            $this->selectedRangeKey = null;
+        }
+        else if($this->selectedRangeKey = $value) {
+            $this->range = DateRange::from($value, $this->timezone);
         }
         else {
             $this->range = null;

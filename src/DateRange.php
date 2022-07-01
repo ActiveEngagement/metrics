@@ -5,6 +5,7 @@ namespace Actengage\Metrics;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use DateInterval;
+use DateTimeZone;
 use Illuminate\Support\Traits\Macroable;
 use JsonSerializable;
 use Throwable;
@@ -46,7 +47,6 @@ class DateRange implements JsonSerializable {
      * to calculate the next/prev iterations in the range. If no interval is
      * passed, the time between the start and end dates are used.
      *
-     * @param \Actengage\Metrics\Range $range
      * @param \Carbon\Carbon $start
      * @param \Carbon\Carbon $end
      * @param \DateInterval $interval
@@ -110,91 +110,88 @@ class DateRange implements JsonSerializable {
         /**
          * The value range units.
          */
-        static::macro('today', function() {
+        static::macro('today', function(DateTimeZone|string|null $tz = null) {
             return new static(
-                now()->startOfDay(), now(), new DateInterval('P1D') 
+                now($tz)->startOfDay(), now($tz), new DateInterval('P1D') 
             );
         });
 
-        static::macro('yesterday', function() {
+        static::macro('yesterday', function(DateTimeZone|string|null $tz = null) {
             return new static(
-                now()->subDay()->startOfDay(), now()->subDay()->endOfDay(), new DateInterval('P1D') 
+                now($tz)->subDay()->startOfDay(), now($tz)->subDay()->endOfDay(), new DateInterval('P1D') 
             );
         });
 
-        static::macro('WTD', function() {
+        static::macro('WTD', function(DateTimeZone|string|null $tz = null) {
             return new static(
-                now()->startOfWeek(), now(), new DateInterval('P7D') 
+                now($tz)->startOfWeek(), now($tz), new DateInterval('P7D') 
             );
         });
         
-        static::macro('MTD', function() {
+        static::macro('MTD', function(DateTimeZone|string|null $tz = null) {
             return new static(
-                now()->startOfMonth(), now(), new DateInterval('P1M') 
+                now($tz)->startOfMonth(), now($tz), new DateInterval('P1M') 
             );
         });
         
-        static::macro('QTD', function() {
+        static::macro('QTD', function(DateTimeZone|string|null $tz = null) {
             return new static(
-                now()->startOfQuarter(), now(), new DateInterval('P3M') 
+                now($tz)->startOfQuarter(), now($tz), new DateInterval('P3M') 
             );
         });
         
-        static::macro('YTD', function() {
+        static::macro('YTD', function(DateTimeZone|string|null $tz = null) {
             return new static(
-                now()->startOfYear(), now(), new DateInterval('P1Y') 
+                now($tz)->startOfYear(), now($tz), new DateInterval('P1Y') 
             );
         });
         
-        static::macro('ALL', function() {
+        static::macro('ALL', function(DateTimeZone|string|null $tz = null) {
             return null;
         });
         
         /**
          * The trend range units.
          */
-        static::macro('minute', function(int $offset = 1) {
-            return new static(now()->subMinute($offset), now(), new DateInterval('PT1M'));
+        static::macro('minute', function(DateTimeZone|string|null $tz = null) {
+            return new static(
+                now($tz)->subMinute()->startOfMinute(), now($tz), new DateInterval('PT1M')
+            );
         });
 
-        static::macro('hour', function(int $offset = 1) {
-            return new static(now()->subHour($offset), now(), new DateInterval('PT1H'));
-        });
-        
-        static::macro('day', function(int $offset = 1) {
-            return new static(now()->subDay($offset), now(), new DateInterval('P1D'));
-        });
-        
-        static::macro('week', function(int $offset = 1) {
-            return new static(now()->subWeek($offset), now(), new DateInterval('P1W'));
-        });
-        
-        static::macro('month', function(int $offset = 1) {
-            return new static(now()->subMonthsWithoutOverflow($offset), now(), new DateInterval('P1M'));
-        });
-        
-        static::macro('quarter', function(int $offset = 1) {
-            return new static(now()->subQuarter($offset), now(), new DateInterval('P3M'));
-        });
-        
-        static::macro('year', function(int $offset = 1) {
-            return new static(now()->subYear($offset), now(), new DateInterval('P1Y'));
-        });
-        
-        /**
-         * Numerical range units (in days)
-         */
-        static::macro('digit', function(string|float|int $interval) {
+        static::macro('hour', function(DateTimeZone|string|null $tz = null) {
             return new static(
-                now()->subDays($interval)->startOfDay(),
-                now()->endOfDay(),
-                new DateInterval(sprintf('P%dD', $interval))
+                now($tz)->subHour()->startOfHour(), now($tz), new DateInterval('PT1H')
             );
         });
         
-        static::macro('interval', function(DateInterval $interval) {
+        static::macro('day', function(DateTimeZone|string|null $tz = null) {
             return new static(
-                ($end = now())->clone()->sub($interval), $end, $interval
+                now($tz)->subDay()->startOfDay(), now($tz), new DateInterval('P1D')
+            );
+        });
+        
+        static::macro('week', function(DateTimeZone|string|null $tz = null) {
+            return new static(
+                now($tz)->subWeek()->startOfDay(), now($tz), new DateInterval('P1W')
+            );
+        });
+        
+        static::macro('month', function(DateTimeZone|string|null $tz = null) {
+            return new static(
+                now($tz)->subMonthsWithoutOverflow()->startOfDay(), now($tz), new DateInterval('P1M')
+            );
+        });
+        
+        static::macro('quarter', function(DateTimeZone|string|null $tz = null) {
+            return new static(
+                now($tz)->subQuarter()->startOfDay(), now($tz), new DateInterval('P3M')
+            );
+        });
+        
+        static::macro('year', function(DateTimeZone|string|null $tz = null) {
+            return new static(
+                now($tz)->subYear()->startOfDay(), now($tz), new DateInterval('P1Y')
             );
         });
     }
@@ -203,17 +200,17 @@ class DateRange implements JsonSerializable {
      * Create an instance from a macro or digit.
      *
      * @param string|float|integer $interval
-     * @param mixed ...$args
+     * @param \DateTimeZone|string|null $tz
      * @return static
      */
-    public static function from(string|float|int $interval, ...$args): ?static
+    public static function from(string|float|int $interval, DateTimeZone|string|null $tz = null): ?static
     {
         if(isset(static::$macros[$interval])) {
-            return static::__callStatic($interval, $args);
+            return static::__callStatic($interval, [$tz]);
         }
 
         if(is_numeric($interval)) {
-            return static::digit($interval, ...$args);
+            return static::digit($interval, $tz);
         }
 
         try {
@@ -222,9 +219,37 @@ class DateRange implements JsonSerializable {
         catch(Throwable $e) {
             throw $e;
         }
+    }
 
-        // throw new BadMethodCallException(sprintf(
-        //     'Method %s::%s does not exist.', static::class, $interval
-        // ));
+    /**
+     * Create a range from a digit (in days).
+     * 
+     * @param string|int $digit
+     * @param \DateTimeZone|string|null $tz
+     * @return $this
+     */
+    public static function digit(string|int $digit, DateTimeZone|string|null $tz = null): static
+    {
+        return new static(
+            now($tz)->subDays($digit)->startOfDay(),
+            now($tz)->endOfDay(),
+            new DateInterval(sprintf('P%dD', $digit))
+        );
+    }
+
+    /**
+     * Create a range from an inteval (in days).
+     * 
+     * @param \DateInterval $interval
+     * @param \DateTimeZone|string|null $tz
+     * @return $this
+     */
+    public static function interval(DateInterval $interval, DateTimeZone|string|null $tz = null): static
+    {
+        return new static(
+            now($tz)->subDays($interval)->startOfDay(),
+            now($tz)->endOfDay(),
+            new DateInterval(sprintf('P%dD', $interval))
+        );
     }
 }

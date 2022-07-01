@@ -6,6 +6,7 @@ use Actengage\Metrics\Contracts\Metric as MetricInterface;
 use Actengage\Metrics\Contracts\Result;
 use DateInterval;
 use DateTimeInterface;
+use DateTimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use JsonSerializable;
@@ -31,9 +32,9 @@ abstract class Metric implements MetricInterface, JsonSerializable
     /**
      * The timezone that is to be used dates.
      *
-     * @var string|null
+     * @var DateTimeZone|null
      */
-    public ?string $timezone = null;
+    public DateTimeZone|null $timezone = null;
 
     /**
      * Calculate the results using the given request.
@@ -77,16 +78,6 @@ abstract class Metric implements MetricInterface, JsonSerializable
     }
 
     /**
-     * Get thed default timezone.
-     *
-     * @return string
-     */
-    public function getDefaultTimezone(): string
-    {
-        return $this->timezone ?? config('app.timezone');
-    }
-
-    /**
      * Prepare the metric for JSON serialization.
      *
      * @return array<string, mixed>
@@ -110,23 +101,6 @@ abstract class Metric implements MetricInterface, JsonSerializable
     {
         return $this->name ?: str(class_basename(get_class($this)))->title()->snake(' ')->toString();
     }
-
-    // /**
-    //  * Set the `range` property.
-    //  *
-    //  * @param \Actengage\Metrics\DateRange|string|null $range
-    //  * @return $this
-    //  */
-    // public function range(DateRange|string|null $range): static
-    // {
-    //     if(is_string($range)) {
-    //         $range = DateRange::$range();
-    //     }
-
-    //     $this->range = $range;
-
-    //     return $this;
-    // }
 
     /**
      * Resolve the metric with the request.
@@ -156,12 +130,14 @@ abstract class Metric implements MetricInterface, JsonSerializable
     /**
      * Set the `timezone` property.
      *
-     * @param string|null $timezone
+     * @param \DateTimeZone|string|null $timezone
      * @return $this
      */
-    public function timezone(?string $timezone): static
+    public function timezone(DateTimeZone|string|null $timezone): static
     {
-        $this->timezone = $timezone;
+        $this->timezone = is_string($timezone)
+            ? new DateTimeZone($timezone)
+            : $timezone;
 
         return $this;
     }
