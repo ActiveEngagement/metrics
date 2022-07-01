@@ -1,6 +1,6 @@
 # Metrics
 
-This package provides a standard alone metrics API similar to Laravel Nova.
+This package provides a standalone metrics API similar to Laravel Nova.
 
 ## Requirements
 
@@ -55,6 +55,7 @@ $result = $metric->resolve(request()->merge([
 ]));
 ```
 
+## Trend Metric
 
 ```php
 use Actengage\Metrics\Contracts\Result;
