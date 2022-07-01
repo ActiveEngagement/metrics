@@ -73,7 +73,6 @@ class TrendMetricTest extends TestCase
         $result = $metric->resolve(request());
 
         $this->assertInstanceOf(TrendResult::class, $result);
-        $this->assertCount(12, $result->trend);
     }
 
     public function testCountByWeeks()
@@ -128,7 +127,6 @@ class TrendMetricTest extends TestCase
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
-        $this->assertCount(25, $result->trend);
     }
 
     public function testCountByMinutes()
@@ -147,7 +145,6 @@ class TrendMetricTest extends TestCase
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
-        $this->assertCount(1441, $result->trend);
     }
 
     public function testAverage()
@@ -223,7 +220,6 @@ class TrendMetricTest extends TestCase
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
-        $this->assertCount(32, $result->trend);
     }
 
     public function testAverageByHours()
@@ -242,7 +238,6 @@ class TrendMetricTest extends TestCase
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
-        $this->assertCount(25, $result->trend);
     }
 
     public function testAverageByMinutes()
@@ -261,7 +256,6 @@ class TrendMetricTest extends TestCase
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
-        $this->assertCount(61, $result->trend);
     }
 
     public function testSum()
@@ -299,7 +293,6 @@ class TrendMetricTest extends TestCase
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
-        $this->assertCount(12, $result->trend);
     }
 
     public function testSumByWeeks()
@@ -318,7 +311,6 @@ class TrendMetricTest extends TestCase
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
-        $this->assertCount(53, $result->trend);
     }
 
     public function testSumByDays()
@@ -337,7 +329,6 @@ class TrendMetricTest extends TestCase
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
-        $this->assertCount(32, $result->trend);
     }
 
     public function testSumByHours()
@@ -356,7 +347,6 @@ class TrendMetricTest extends TestCase
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
-        $this->assertCount(25, $result->trend);
     }
 
     public function testSumByMinutes()
@@ -375,7 +365,6 @@ class TrendMetricTest extends TestCase
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
-        $this->assertCount(61, $result->trend);
     }
 
     public function testMax()

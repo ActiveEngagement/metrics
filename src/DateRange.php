@@ -247,9 +247,7 @@ class DateRange implements JsonSerializable {
     public static function interval(DateInterval $interval, DateTimeZone|string|null $tz = null): static
     {
         return new static(
-            now($tz)->subDays($interval)->startOfDay(),
-            now($tz)->endOfDay(),
-            new DateInterval(sprintf('P%dD', $interval))
+            ($end = now($tz))->clone()->sub($interval), $end, $interval
         );
     }
 }
