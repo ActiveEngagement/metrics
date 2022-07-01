@@ -1,0 +1,43 @@
+{
+    "name": "actengage/metrics",
+    "description": "A abstraction for generating metrics in Laravel.",
+    "keywords": ["metrics", "statistics", "Laravel"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Justin Kimbrell",
+            "email": "jkimbrell@actengage.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "laravel/framework": "^9.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.5",
+        "phpunit/phpunit": "^9.5",
+        "orchestra/testbench": "^7.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Actengage\\Metrics\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4" : {
+            "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "\\Actengage\\Metrics\\ServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php ./vendor/bin/testbench package:discover --ansi"
+        ]
+    }
+}
