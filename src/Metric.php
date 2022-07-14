@@ -63,6 +63,17 @@ abstract class Metric implements MetricInterface, JsonSerializable
     }
 
     /**
+     * Define additional keys for the cache.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return array
+     */
+    public function cacheKeys(Request $request): array
+    {
+        return [];
+    }
+
+    /**
      * Get the appropriate cache key for the metric.
      *
      * @param \Illuminate\Http\Request $request
@@ -70,11 +81,17 @@ abstract class Metric implements MetricInterface, JsonSerializable
      */
     public function getCacheKey(Request $request): string
     {
-        return sprintf(
-            'actengage.metric.%s.%s',
-            $this->uriKey(),
-            $this->range
-        );
+        $keys = [
+            $request->getPathInfo(),
+            base64_encode(json_encode($request->all())),
+            ...array_filter($this->cacheKeys($request), function($value) {
+                return !is_null($value);
+            })
+        ];
+        
+        $format = implode('.', array_fill(0, count($keys), '%s'));
+        
+        return sprintf(sprintf('actengage.metric.%s', $format), ...$keys);
     }
 
     /**
