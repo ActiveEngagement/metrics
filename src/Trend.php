@@ -541,7 +541,7 @@ abstract class Trend extends RangedMetric
             $range = min($range ?? max($ranges), max($ranges));
         }
 
-        if(!$range = DateRange::from($this->selectedRangeKey)) {
+        if(!$range = DateRange::from($this->selectedRangeKey, $this->timezone)) {
             return null;
         }
         
