@@ -81,7 +81,7 @@ abstract class Trend extends RangedMetric
             $range = new DateRange(
                 Carbon::make($results->pluck('date_result')->min()),
                 now(),
-                DateRange::from($unit)->interval
+                DateRange::from($unit, $this->timezone)->interval
             );
         }
 
@@ -546,7 +546,7 @@ abstract class Trend extends RangedMetric
         }
         
         return new DateRange(
-            $range->start, $range->end, DateRange::from($unit)->interval
+            $range->start, $range->end, DateRange::from($unit, $this->timezone)->interval
         );
     }
     
