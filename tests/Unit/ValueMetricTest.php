@@ -17,21 +17,23 @@ class ValueMetricTest extends TestCase
 
         $faker = app(Factory::class)->create();
 
-        User::insert(collect(array_fill(0, 100, fn() => [
+        User::insert(collect(array_fill(0, 100, fn () => [
             'name' => $faker->name(),
             'email' => $faker->email(),
             'password' => $faker->password(),
             'age' => $faker->numberBetween(3, 99),
-            'created_at' => now()
-        ]))->map(function($value) {
+            'created_at' => now(),
+        ]))->map(function ($value) {
             return $value();
         })->all());
     }
 
     public function testCount()
     {
-        $metric = new class extends Value {
-            public function ranges(): array {
+        $metric = new class extends Value
+        {
+            public function ranges(): array
+            {
                 return [
                     '5' => '5 Days',
                     '10' => '10 Days',
@@ -42,10 +44,12 @@ class ValueMetricTest extends TestCase
                     'MTD' => 'Month To Date',
                     'QTD' => 'Quarter To Date',
                     'YTD' => 'Year To Date',
-                    'ALL' => 'All Time'
+                    'ALL' => 'All Time',
                 ];
             }
-            public function calculate(Request $request): Result {
+
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->title('Total Users')
                     ->description('The total number of users.')
@@ -58,9 +62,9 @@ class ValueMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'MTD'
+            'range' => 'MTD',
         ]));
-        
+
         $this->assertNotNull($result->metric->title);
         $this->assertNotNull($result->metric->description);
         $this->assertEquals(100, $result->value);
@@ -70,14 +74,16 @@ class ValueMetricTest extends TestCase
 
     public function testAverage()
     {
-        $metric = new class extends Value {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Value
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this->average(User::class, 'age');
             }
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'daily'
+            'range' => 'daily',
         ]));
 
         $this->assertGreaterThan(3, $result->value);
@@ -85,14 +91,16 @@ class ValueMetricTest extends TestCase
 
     public function testMax()
     {
-        $metric = new class extends Value {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Value
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this->max(User::class, 'age');
             }
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'daily'
+            'range' => 'daily',
         ]));
 
         $this->assertGreaterThan(0, $result->value);
@@ -100,14 +108,16 @@ class ValueMetricTest extends TestCase
 
     public function testMin()
     {
-        $metric = new class extends Value {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Value
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this->min(User::class, 'age');
             }
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'daily'
+            'range' => 'daily',
         ]));
 
         $this->assertGreaterThan(0, $result->value);
@@ -115,14 +125,16 @@ class ValueMetricTest extends TestCase
 
     public function testSum()
     {
-        $metric = new class extends Value {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Value
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this->sum(User::class, 'age');
             }
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'daily'
+            'range' => 'daily',
         ]));
 
         $this->assertGreaterThan(3000, $result->value);

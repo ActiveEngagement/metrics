@@ -20,15 +20,11 @@ abstract class RangedMetric extends Metric
 
     /**
      * The selected range key.
-     *
-     * @var string|int|null
      */
     public string|int|null $selectedRangeKey = null;
 
     /**
      * Get the ranges available for the metric.
-     *
-     * @return array
      */
     public function ranges(): array
     {
@@ -38,22 +34,20 @@ abstract class RangedMetric extends Metric
     /**
      * Set the default range.
      *
-     * @param \Actengage\Metrics\DateRange|string|int|null $value
+     * @param  \Actengage\Metrics\DateRange|string|int|null  $value
      * @return $this
      */
     public function range(DateRange|string|int|null $value)
-    {   
-        if($value instanceof DateRange) {
+    {
+        if ($value instanceof DateRange) {
             $this->range = $value;
             $this->selectedRangeKey = null;
-        }
-        else if($this->selectedRangeKey = $value) {
+        } elseif ($this->selectedRangeKey = $value) {
             $this->range = DateRange::from($value, $this->timezone);
-        }
-        else {
+        } else {
             $this->range = null;
         }
-        
+
         return $this;
     }
 

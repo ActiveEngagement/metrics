@@ -8,15 +8,12 @@ trait TransformsResults
 {
     /**
      * The callback used to transform the value before display.
-     *
-     * @var \Closure|null
      */
     public Closure|null $transformCallback = null;
 
     /**
      * Set the callback used to transform the value before presentation.
      *
-     * @param  \Closure|null  $transformCallback
      * @return $this
      */
     public function transform(Closure|null $transformCallback)

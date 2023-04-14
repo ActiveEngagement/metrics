@@ -18,15 +18,11 @@ class TrendResult extends RangedResult
 
     /**
      * The metric value prefix.
-     *
-     * @var string|null
      */
     public ?string $prefix = null;
 
     /**
      * The previous value.
-     *
-     * @var array
      */
     public array $trend = [];
 
@@ -39,15 +35,11 @@ class TrendResult extends RangedResult
 
     /**
      * The metric value suffix.
-     *
-     * @var string|null
      */
     public ?string $suffix = null;
 
     /**
      * Determines whether a value of 0 counts as "No Current Data".
-     *
-     * @var boolean
      */
     public bool $zeroResult = false;
 
@@ -74,7 +66,7 @@ class TrendResult extends RangedResult
     {
         return $this->prefix($symbol);
     }
-    
+
     /**
      * Indicate that the metric represents a dollar value.
      *
@@ -89,7 +81,7 @@ class TrendResult extends RangedResult
     /**
      * Set the metric value prefix.
      *
-     * @param string $prefix
+     * @param  string  $prefix
      * @return $this
      */
     public function prefix($prefix): static
@@ -115,7 +107,7 @@ class TrendResult extends RangedResult
     /**
      * Set the metric value suffix.
      *
-     * @param string $suffix
+     * @param  string  $suffix
      * @return $this
      */
     public function suffix($suffix): static

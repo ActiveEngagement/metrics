@@ -2,7 +2,6 @@
 
 namespace Actengage\Metrics\Results;
 
-use Actengage\Metrics\DateRange;
 use Actengage\Metrics\RangedResult;
 use Actengage\Metrics\TransformsResults;
 
@@ -19,22 +18,16 @@ class ValueResult extends RangedResult
 
     /**
      * The value of the result.
-     *
-     * @var mixed
      */
     public mixed $value;
 
     /**
      * The metric value prefix.
-     *
-     * @var string|null
      */
     public ?string $prefix = null;
 
     /**
      * The previous value.
-     *
-     * @var mixed
      */
     public mixed $previous = null;
 
@@ -47,15 +40,11 @@ class ValueResult extends RangedResult
 
     /**
      * The metric value suffix.
-     *
-     * @var string|null
      */
     public ?string $suffix = null;
 
     /**
      * Determines whether a value of 0 counts as "No Current Data".
-     *
-     * @var boolean
      */
     public bool $zeroResult = false;
 
@@ -82,7 +71,7 @@ class ValueResult extends RangedResult
     {
         return $this->prefix($symbol);
     }
-    
+
     /**
      * Indicate that the metric represents a dollar value.
      *
@@ -96,18 +85,16 @@ class ValueResult extends RangedResult
 
     /**
      * Calculate the percentage of chang over the last cycle.
-     * 
+     *
      * @return mixed
      */
     public function percentChanged()
     {
-        if($this->value == 0) {
+        if ($this->value == 0) {
             $value = $this->previous;
-        }
-        else if($this->previous == 0) {
+        } elseif ($this->previous == 0) {
             $value = $this->value;
-        }
-        else {
+        } else {
             $value = ($this->previous - $this->value) / $this->previous;
         }
 
@@ -117,7 +104,7 @@ class ValueResult extends RangedResult
     /**
      * Set the metric value prefix.
      *
-     * @param string $prefix
+     * @param  string  $prefix
      * @return $this
      */
     public function prefix($prefix): static
@@ -130,7 +117,7 @@ class ValueResult extends RangedResult
     /**
      * Set the previous value for the metric.
      *
-     * @param mixed $previous
+     * @param  mixed  $previous
      * @return $this
      */
     public function previous($previous): static
@@ -144,7 +131,7 @@ class ValueResult extends RangedResult
     /**
      * Set the metric value suffix.
      *
-     * @param string $suffix
+     * @param  string  $suffix
      * @return $this
      */
     public function suffix($suffix): static
@@ -157,7 +144,6 @@ class ValueResult extends RangedResult
     /**
      * Sets the `zeroResult` property.
      *
-     * @param bool $zeroResult
      * @return $this
      */
     public function allowZeroResult(bool $zeroResult = true): static
@@ -184,7 +170,7 @@ class ValueResult extends RangedResult
             'suffix' => $this->suffix,
             // 'suffixInflection' => $this->suffixInflection,
             // 'format' => $this->format,
-            'zero_result' => $this->zeroResult
+            'zero_result' => $this->zeroResult,
         ], parent::jsonSerialize());
     }
 }

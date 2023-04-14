@@ -2,14 +2,21 @@
 
 namespace Actengage\Metrics\Expressions;
 
+use Illuminate\Database\Grammar;
+
 class SqliteTrendDateExpression extends TrendDateExpression
 {
+    public function __toString()
+    {
+        return $this->getValue($this->query->getQuery()->getGrammar());
+    }
+
     /**
      * Get the value of the expression.
      *
      * @return mixed
      */
-    public function getValue()
+    public function getValue(Grammar $grammar)
     {
         $offset = $this->offset();
 

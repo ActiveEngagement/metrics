@@ -7,17 +7,16 @@ use Actengage\Metrics\Results\ValueResult;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 abstract class Value extends RangedMetric
-{    
+{
     use RoundingPrecision;
 
     /**
      * Return a value result showing the growth of a model over a given time frame.
      *
-     * @param \Illuminate\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model> $model
-     * @param string $function
-     * @param \Illuminate\Database\Query\Expression|string|null $column
-     * @param string|null $dateColumn
-     * @return \Actengage\Metrics\Results\ValueResult
+     * @param  \Illuminate\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model>  $model
+     * @param  string  $function
+     * @param  \Illuminate\Database\Query\Expression|string|null  $column
+     * @param  string|null  $dateColumn
      */
     protected function aggregate($model, $function, $column = null, $dateColumn = null): ValueResult
     {
@@ -25,7 +24,7 @@ abstract class Value extends RangedMetric
 
        $column = $column ?? $query->getModel()->getQualifiedKeyName();
 
-        if($this->range === null) {
+        if ($this->range === null) {
             return $this->result(
                 round(
                     with(clone $query)->{$function}($column),
@@ -34,7 +33,7 @@ abstract class Value extends RangedMetric
                 )
             );
         }
-        
+
        $dateColumn = $dateColumn ?? $query->getModel()->getQualifiedCreatedAtColumn();
 
        $previousValue = round(
@@ -59,23 +58,22 @@ abstract class Value extends RangedMetric
     /**
      * Return a value result showing the growth of an average aggregate over time.
      *
-     * @param \Illuminate\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model> $model
-     * @param \Illuminate\Database\Query\Expression|string|null $column
-     * @param string|null $dateColumn
+     * @param  \Illuminate\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model>  $model
+     * @param  \Illuminate\Database\Query\Expression|string|null  $column
+     * @param  string|null  $dateColumn
      * @return \Actengage\Metrics\Results\ValueResult
      */
     public function average($model, $column, $dateColumn = null)
     {
         return $this->aggregate($model, 'avg', $column, $dateColumn);
     }
-    
+
     /**
      * Return a value result showing the growth of an count aggregate over time.
      *
-     * @param \Illuminate\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model> $model
-     * @param \Illuminate\Database\Query\Expression|string|null $column
-     * @param string|null $dateColumn
-     * @return \Actengage\Metrics\Results\ValueResult
+     * @param  \Illuminate\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model>  $model
+     * @param  \Illuminate\Database\Query\Expression|string|null  $column
+     * @param  string|null  $dateColumn
      */
     public function count($model, $column = null, $dateColumn = null): ValueResult
     {
@@ -85,9 +83,9 @@ abstract class Value extends RangedMetric
     /**
      * Return a value result showing the growth of a maximum aggregate over time.
      *
-     * @param \Illuminate\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model> $model
-     * @param \Illuminate\Database\Query\Expression|string|null $column
-     * @param string|null $dateColumn
+     * @param  \Illuminate\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model>  $model
+     * @param  \Illuminate\Database\Query\Expression|string|null  $column
+     * @param  string|null  $dateColumn
      * @return \Actengage\Metrics\Results\ValueResult
      */
     public function max($model, $column, $dateColumn = null)
@@ -98,9 +96,9 @@ abstract class Value extends RangedMetric
     /**
      * Return a value result showing the growth of a minimum aggregate over time.
      *
-     * @param \Illuminate\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model> $model
-     * @param \Illuminate\Database\Query\Expression|string|null $column
-     * @param string|null $dateColumn
+     * @param  \Illuminate\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model>  $model
+     * @param  \Illuminate\Database\Query\Expression|string|null  $column
+     * @param  string|null  $dateColumn
      * @return \Actengage\Metrics\Results\ValueResult
      */
     public function min($model, $column, $dateColumn = null)
@@ -111,20 +109,19 @@ abstract class Value extends RangedMetric
     /**
      * Instantiate a Result using the given value.
      *
-     * @param mixed $value
      * @return \Actengage\Metrics\Contracts\Result;
      */
     public function result(mixed $value): ResultInterface
     {
-        return (new ValueResult($this, $value));
+        return new ValueResult($this, $value);
     }
 
     /**
      * Return a value result showing the growth of a sum aggregate over time.
      *
-     * @param \Illuminate\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model> $model
-     * @param \Illuminate\Database\Query\Expression|string|null $column
-     * @param string|null $dateColumn
+     * @param  \Illuminate\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model>  $model
+     * @param  \Illuminate\Database\Query\Expression|string|null  $column
+     * @param  string|null  $dateColumn
      * @return \Actengage\Metrics\Results\ValueResult
      */
     public function sum($model, $column, $dateColumn = null)

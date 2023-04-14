@@ -10,10 +10,10 @@ use Orchestra\Testbench\TestCase as BaseTestCase;
 class TestCase extends BaseTestCase
 {
     use RefreshDatabase;
-    
+
     /**
-    * Setup the test environment.
-    */
+     * Setup the test environment.
+     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -21,7 +21,7 @@ class TestCase extends BaseTestCase
         $this->loadMigrationsFrom(__DIR__.'/database/migrations/');
 
         $this->artisan('migrate', [
-            '--database' => 'testbench'
+            '--database' => 'testbench',
         ]);
     }
 
@@ -36,36 +36,35 @@ class TestCase extends BaseTestCase
         // Setup default database to use sqlite :memory:
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('database.connections.testbench', [
-            'driver'   => 'sqlite',
+            'driver' => 'sqlite',
             'database' => ':memory:',
-            'prefix'   => '',
+            'prefix' => '',
         ]);
     }
 
     /**
      * Get the package service providers.
      *
-     * @param \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      * @return array
      */
     protected function getPackageProviders($app)
     {
         return [
-            ServiceProvider::class
+            ServiceProvider::class,
         ];
     }
 
     /**
      * Get the package facades.
      *
-     * @param \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      * @return array
      */
     protected function getPackageAliases($app)
     {
         return [
-            'Metric' => Metric::class
+            'Metric' => Metric::class,
         ];
     }
-
 }

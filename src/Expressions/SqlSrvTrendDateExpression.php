@@ -2,6 +2,8 @@
 
 namespace Actengage\Metrics\Expressions;
 
+use Illuminate\Database\Grammar;
+
 class SqlSrvTrendDateExpression extends TrendDateExpression
 {
     /**
@@ -9,7 +11,7 @@ class SqlSrvTrendDateExpression extends TrendDateExpression
      *
      * @return mixed
      */
-    public function getValue()
+    public function getValue(Grammar $grammar)
     {
         $column = $this->wrap($this->column);
         $offset = $this->offset();

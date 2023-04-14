@@ -12,10 +12,9 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use InvalidArgumentException;
 
 abstract class Trend extends RangedMetric
-{    
+{
     use RoundingPrecision;
 
     /**
@@ -30,11 +29,9 @@ abstract class Trend extends RangedMetric
     const BY_HOURS = 'hour';
 
     const BY_MINUTES = 'minute';
-    
+
     /**
      * Format the date in 12 hour time.
-     *
-     * @var boolean
      */
     protected bool $twelveHourTime = true;
 
@@ -53,7 +50,7 @@ abstract class Trend extends RangedMetric
         $query = $model instanceof Builder ? $model : (new $model)->newQuery();
 
         $dateColumn = $dateColumn ?? $query->getModel()->getQualifiedCreatedAtColumn();
-        
+
         $expression = (string) TrendDateExpressionFactory::make(
             $query, $dateColumn, $unit, $this->timezone
         );
@@ -66,8 +63,8 @@ abstract class Trend extends RangedMetric
 
         $results = $query
                 ->select(DB::raw("{$expression} as date_result, {$function}({$wrappedColumn}) as aggregate"))
-                ->where(function($query) use ($dateColumn, $range) {
-                    if($range) {
+                ->where(function ($query) use ($dateColumn, $range) {
+                    if ($range) {
                         $query->whereBetween(
                             $dateColumn, [$range->start, $range->end]
                         );
@@ -77,7 +74,7 @@ abstract class Trend extends RangedMetric
                 ->orderBy('date_result')
                 ->get();
 
-        if(!$range) {
+        if (! $range) {
             $range = new DateRange(
                 Carbon::make($results->pluck('date_result')->min()),
                 now(),
@@ -129,7 +126,7 @@ abstract class Trend extends RangedMetric
     public function countByMonths($model, $column = null)
     {
         return $this->count($model, self::BY_MONTHS, $column);
-    }    
+    }
 
     /**
      * Return a value result showing a count aggregate over weeks.
@@ -503,13 +500,13 @@ abstract class Trend extends RangedMetric
      */
     public function result($value = null): ResultInterface
     {
-        return (new TrendResult($this, $value));
+        return new TrendResult($this, $value);
     }
 
     /**
      * Set the `twelveHourTime` property to `true`.
      *
-     * @param boolean $twelveHourTime
+     * @param  bool  $twelveHourTime
      * @return $this
      */
     public function twelveHourTime($twelveHourTime = true): static
@@ -532,29 +529,29 @@ abstract class Trend extends RangedMetric
         $ranges = collect($this->ranges())->keys()->values()->all();
 
         $range = $this->selectedRangeKey;
-        
-        if(!$range && $this->range) {
+
+        if (! $range && $this->range) {
             return $this->range;
         }
 
-        if(count($ranges) > 0 && !in_array($range, $ranges)) {
+        if (count($ranges) > 0 && ! in_array($range, $ranges)) {
             $range = min($range ?? max($ranges), max($ranges));
         }
 
-        if(!$range = DateRange::from($this->selectedRangeKey, $this->timezone)) {
+        if (! $range = DateRange::from($this->selectedRangeKey, $this->timezone)) {
             return null;
         }
-        
+
         return new DateRange(
             $range->start, $range->end, DateRange::from($unit, $this->timezone)->interval
         );
     }
-    
+
     /**
      * Get all of the possible date results for the given units.
      *
-     * @param \Actengage\Metrics\DateRange $range
-     * @param string $unit
+     * @param  \Actengage\Metrics\DateRange  $range
+     * @param  string  $unit
      * @return array<string, int>
      */
     protected function getAllPossibleDateResults(DateRange $range, $unit)
@@ -564,7 +561,7 @@ abstract class Trend extends RangedMetric
         ] = 0;
 
         $nextRange = $range;
-        
+
         while ($nextRange->start->lt($endingDate = now())) {
             $nextRange = $nextRange->next();
 
@@ -656,7 +653,6 @@ abstract class Trend extends RangedMetric
     /**
      * Format the possible aggregate result date into a proper string.
      *
-     * @param  \Carbon\CarbonInterface  $date
      * @param  string  $unit
      * @return string
      */

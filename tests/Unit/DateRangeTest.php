@@ -12,7 +12,7 @@ class DateRangeTest extends TestCase
     public function testWeekToDateRange()
     {
         $range = DateRange::from('WTD');
-        
+
         $this->assertEquals(new CarbonInterval('P7D'), $range->interval);
         $this->assertEquals(now()->startOfWeek(), $range->start);
         $this->assertEquals(now()->subWeek()->startOfWeek(), $range->prev()->start);
@@ -22,7 +22,7 @@ class DateRangeTest extends TestCase
     public function testMonthToDateRange()
     {
         $range = DateRange::from('MTD');
-        
+
         $this->assertEquals(new CarbonInterval('P1M'), $range->interval);
         $this->assertEquals(now()->startOfMonth(), $range->start);
         $this->assertEquals(now()->subMonth()->startOfMonth(), $range->prev()->start);
@@ -32,7 +32,7 @@ class DateRangeTest extends TestCase
     public function testYearToDateRange()
     {
         $range = DateRange::from('YTD');
-        
+
         $this->assertEquals(new CarbonInterval('P1Y'), $range->interval);
         $this->assertEquals(now()->startOfYear(), $range->start);
         $this->assertEquals(now()->subYear()->startOfYear(), $range->prev()->start);
@@ -42,17 +42,17 @@ class DateRangeTest extends TestCase
     public function testTodayDateRange()
     {
         $range = DateRange::from('today');
-        
+
         $this->assertEquals(new CarbonInterval('P1D'), $range->interval);
         $this->assertEquals(now()->startOfDay(), $range->start);
         $this->assertEquals(now()->subDay()->startOfDay(), $range->prev()->start);
-        $this->assertEquals( now()->subDay()->endOfDay(), $range->prev()->end);
+        $this->assertEquals(now()->subDay()->endOfDay(), $range->prev()->end);
     }
 
     public function testYesterdayDateRange()
     {
         $range = DateRange::from('yesterday');
-        
+
         $this->assertEquals(new CarbonInterval('P1D'), $range->interval);
         $this->assertEquals(now()->subDay()->startOfDay(), $range->start);
         $this->assertEquals(now()->subDays(2)->startOfDay(), $range->prev()->start);

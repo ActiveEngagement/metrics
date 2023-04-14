@@ -6,8 +6,6 @@ trait DescribeResults
 {
     /**
      * A description of the results.
-     *
-     * @var string|null
      */
     public ?string $description = null;
 
@@ -20,8 +18,7 @@ trait DescribeResults
 
     /**
      * Set the `description` property.
-     * 
-     * @param string|null $description
+     *
      * @return $this
      */
     public function description(?string $description): static
@@ -33,8 +30,7 @@ trait DescribeResults
 
     /**
      * Set the `title` property.
-     * 
-     * @param string|null $title
+     *
      * @return $this
      */
     public function title(?string $title): static

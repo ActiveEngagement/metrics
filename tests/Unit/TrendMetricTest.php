@@ -19,21 +19,23 @@ class TrendMetricTest extends TestCase
 
         $faker = app(Factory::class)->create();
 
-        User::insert(collect(array_fill(0, 100, fn() => [
+        User::insert(collect(array_fill(0, 100, fn () => [
             'name' => $faker->name(),
             'email' => $faker->email(),
             'password' => $faker->password(),
             'age' => $faker->numberBetween(3, 99),
-            'created_at' => $faker->dateTimeBetween('-60 days', 'now')
-        ]))->map(function($value) {
+            'created_at' => $faker->dateTimeBetween('-60 days', 'now'),
+        ]))->map(function ($value) {
             return $value();
         })->all());
     }
 
     public function testCount()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->title('User Registrations')
                     ->description('User registrations trending by day.')
@@ -46,9 +48,9 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 30
+            'range' => 30,
         ]));
-        
+
         $this->assertInstanceOf(TrendResult::class, $result);
         $this->assertNotNull($result->metric->title);
         $this->assertNotNull($result->metric->description);
@@ -60,9 +62,11 @@ class TrendMetricTest extends TestCase
     public function testCountByMonths()
     {
         $this->range = DateRange::from(365);
-        
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range(365)
@@ -77,8 +81,10 @@ class TrendMetricTest extends TestCase
 
     public function testCountByWeeks()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -87,7 +93,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'P5W'
+            'range' => 'P5W',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -96,8 +102,10 @@ class TrendMetricTest extends TestCase
 
     public function testCountByDays()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range(30)
@@ -113,8 +121,10 @@ class TrendMetricTest extends TestCase
 
     public function testCountByHours()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -123,7 +133,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'day'
+            'range' => 'day',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -131,8 +141,10 @@ class TrendMetricTest extends TestCase
 
     public function testCountByMinutes()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -141,7 +153,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'day'
+            'range' => 'day',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -149,8 +161,10 @@ class TrendMetricTest extends TestCase
 
     public function testAverage()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -159,7 +173,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'month'
+            'range' => 'month',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -168,8 +182,10 @@ class TrendMetricTest extends TestCase
 
     public function testAverageByMonths()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -178,7 +194,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'month'
+            'range' => 'month',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -187,8 +203,10 @@ class TrendMetricTest extends TestCase
 
     public function testAverageByWeeks()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -197,7 +215,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'year'
+            'range' => 'year',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -206,8 +224,10 @@ class TrendMetricTest extends TestCase
 
     public function testAverageByDays()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -216,7 +236,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'month'
+            'range' => 'month',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -224,8 +244,10 @@ class TrendMetricTest extends TestCase
 
     public function testAverageByHours()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -234,7 +256,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'day'
+            'range' => 'day',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -242,8 +264,10 @@ class TrendMetricTest extends TestCase
 
     public function testAverageByMinutes()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -252,7 +276,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'hour'
+            'range' => 'hour',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -260,8 +284,10 @@ class TrendMetricTest extends TestCase
 
     public function testSum()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -270,7 +296,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'month'
+            'range' => 'month',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -279,8 +305,10 @@ class TrendMetricTest extends TestCase
 
     public function testSumByMonths()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -289,7 +317,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'year'
+            'range' => 'year',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -297,8 +325,10 @@ class TrendMetricTest extends TestCase
 
     public function testSumByWeeks()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -307,7 +337,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'year'
+            'range' => 'year',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -315,8 +345,10 @@ class TrendMetricTest extends TestCase
 
     public function testSumByDays()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -325,7 +357,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'month'
+            'range' => 'month',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -333,8 +365,10 @@ class TrendMetricTest extends TestCase
 
     public function testSumByHours()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -343,7 +377,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'day'
+            'range' => 'day',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -351,8 +385,10 @@ class TrendMetricTest extends TestCase
 
     public function testSumByMinutes()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -361,7 +397,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'hour'
+            'range' => 'hour',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -369,8 +405,10 @@ class TrendMetricTest extends TestCase
 
     public function testMax()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -379,7 +417,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'month'
+            'range' => 'month',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -387,8 +425,10 @@ class TrendMetricTest extends TestCase
 
     public function testMaxByMonths()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -397,7 +437,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'month'
+            'range' => 'month',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -405,8 +445,10 @@ class TrendMetricTest extends TestCase
 
     public function testMaxByWeeks()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -415,7 +457,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'month'
+            'range' => 'month',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -423,8 +465,10 @@ class TrendMetricTest extends TestCase
 
     public function testMaxByDays()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -433,7 +477,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'month'
+            'range' => 'month',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -441,8 +485,10 @@ class TrendMetricTest extends TestCase
 
     public function testMaxByHours()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -451,7 +497,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'month'
+            'range' => 'month',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -459,8 +505,10 @@ class TrendMetricTest extends TestCase
 
     public function testMaxByMinutes()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -469,7 +517,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'month'
+            'range' => 'month',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -477,8 +525,10 @@ class TrendMetricTest extends TestCase
 
     public function testMin()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -487,7 +537,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'month'
+            'range' => 'month',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -495,8 +545,10 @@ class TrendMetricTest extends TestCase
 
     public function testMinByMonths()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -505,7 +557,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'month'
+            'range' => 'month',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -513,8 +565,10 @@ class TrendMetricTest extends TestCase
 
     public function testMinByWeeks()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -523,7 +577,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'month'
+            'range' => 'month',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -531,8 +585,10 @@ class TrendMetricTest extends TestCase
 
     public function testMinByDays()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -541,7 +597,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'month'
+            'range' => 'month',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
@@ -549,8 +605,10 @@ class TrendMetricTest extends TestCase
 
     public function testMinByHours()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -559,17 +617,18 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'month'
+            'range' => 'month',
         ]));
-        
 
         $this->assertInstanceOf(TrendResult::class, $result);
     }
 
     public function testMinByMinutes()
     {
-        $metric = new class extends Trend {
-            public function calculate(Request $request): Result {
+        $metric = new class extends Trend
+        {
+            public function calculate(Request $request): Result
+            {
                 return $this
                     ->twelveHourTime()
                     ->range($request->range)
@@ -578,7 +637,7 @@ class TrendMetricTest extends TestCase
         };
 
         $result = $metric->resolve(request()->merge([
-            'range' => 'month'
+            'range' => 'month',
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);

@@ -17,8 +17,6 @@ abstract class Metric implements MetricInterface, JsonSerializable
 
     /**
      * The displayable name of the metric.
-     *
-     * @var string|null
      */
     public ?string $name = null;
 
@@ -31,31 +29,25 @@ abstract class Metric implements MetricInterface, JsonSerializable
 
     /**
      * The timezone that is to be used dates.
-     *
-     * @var DateTimeZone|null
      */
     public DateTimeZone|null $timezone = null;
 
     /**
      * Calculate the results using the given request.
      *
-     * @param \Illuminate\Http\Request $request
      * @return \Actengage\Metrics\Contracts\Result;
      */
-    abstract function calculate(Request $request): Result;
+    abstract public function calculate(Request $request): Result;
 
     /**
      * Instantiate a Result using the given value.
      *
-     * @param mixed $value
      * @return \Actengage\Metrics\Contracts\Result;
      */
-    abstract function result(mixed $value): Result;
+    abstract public function result(mixed $value): Result;
 
     /**
      * Determine for how many minutes the metric should be cached.
-     *
-     * @return \DateTimeInterface|\DateInterval|float|int|null
      */
     public function cacheFor(): DateTimeInterface|DateInterval|float|int|null
     {
@@ -64,9 +56,6 @@ abstract class Metric implements MetricInterface, JsonSerializable
 
     /**
      * Define additional keys for the cache.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return array
      */
     public function cacheKeys(Request $request): array
     {
@@ -75,22 +64,19 @@ abstract class Metric implements MetricInterface, JsonSerializable
 
     /**
      * Get the appropriate cache key for the metric.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return string
      */
     public function getCacheKey(Request $request): string
     {
         $keys = [
             $request->getPathInfo(),
             base64_encode(json_encode($request->all())),
-            ...array_filter($this->cacheKeys($request), function($value) {
-                return !is_null($value);
-            })
+            ...array_filter($this->cacheKeys($request), function ($value) {
+                return ! is_null($value);
+            }),
         ];
-        
+
         $format = implode('.', array_fill(0, count($keys), '%s'));
-        
+
         return sprintf(sprintf('actengage.metric.%s', $format), ...$keys);
     }
 
@@ -111,8 +97,6 @@ abstract class Metric implements MetricInterface, JsonSerializable
 
     /**
      * Get the displayable name of the metric.
-     *
-     * @return string
      */
     public function name(): string
     {
@@ -121,9 +105,6 @@ abstract class Metric implements MetricInterface, JsonSerializable
 
     /**
      * Resolve the metric with the request.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Actengage\Metrics\Contracts\Result
      */
     public function resolve(Request $request): Result
     {
@@ -131,7 +112,7 @@ abstract class Metric implements MetricInterface, JsonSerializable
             return $this->calculate($request);
         };
 
-        if($cacheFor = $this->cacheFor()) {
+        if ($cacheFor = $this->cacheFor()) {
             $cacheFor = is_numeric($cacheFor) ? new DateInterval(sprintf('PT%dS', $cacheFor * 60)) : $cacheFor;
 
             return Cache::remember(
@@ -147,7 +128,6 @@ abstract class Metric implements MetricInterface, JsonSerializable
     /**
      * Set the `timezone` property.
      *
-     * @param \DateTimeZone|string|null $timezone
      * @return $this
      */
     public function timezone(DateTimeZone|string|null $timezone): static
@@ -161,8 +141,6 @@ abstract class Metric implements MetricInterface, JsonSerializable
 
     /**
      * Get the URI key for the metric.
-     *
-     * @return string
      */
     public function uriKey(): string
     {
