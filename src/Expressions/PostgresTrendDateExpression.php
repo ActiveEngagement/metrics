@@ -6,6 +6,11 @@ use Illuminate\Database\Grammar;
 
 class PostgresTrendDateExpression extends TrendDateExpression
 {
+    public function __toString()
+    {
+        return $this->getValue($this->query->getQuery()->getGrammar());
+    }
+
     /**
      * Get the value of the expression.
      *
