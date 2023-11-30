@@ -6,6 +6,7 @@ use Carbon\CarbonImmutable;
 use DateTime;
 use DateTimeZone;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Expression;
 
 abstract class TrendDateExpression extends Expression
@@ -46,7 +47,7 @@ abstract class TrendDateExpression extends Expression
      * @param  string  $timezone
      * @return void
      */
-    public function __construct(Builder $query, $column, $unit, $timezone)
+    public function __construct(Builder|Relation $query, $column, $unit, $timezone)
     {
         $this->unit = $unit;
         $this->query = $query;

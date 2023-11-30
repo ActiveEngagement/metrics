@@ -3,6 +3,7 @@
 namespace Actengage\Metrics\Expressions;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
 
@@ -16,11 +17,11 @@ class TrendDateExpressionFactory
      * @param  string  $column
      * @param  string  $unit
      * @param  string  $timezone
-     * @return \Laravel\Nova\Metrics\TrendDateExpression
+     * @return \Actengage\Metrics\TrendDateExpression
      *
      * @throws \InvalidArgumentException
      */
-    public static function make(Builder $query, $column, $unit, $timezone)
+    public static function make(Builder|Relation $query, $column, $unit, $timezone)
     {
         $driver = $query->getConnection()->getDriverName();
 
