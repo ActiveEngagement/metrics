@@ -52,8 +52,6 @@ class TrendMetricTest extends TestCase
         ]));
 
         $this->assertInstanceOf(TrendResult::class, $result);
-        $this->assertNotNull($result->metric->title);
-        $this->assertNotNull($result->metric->description);
         $this->assertEquals('#', $result->prefix);
         $this->assertEquals('users', $result->suffix);
         $this->assertCount(31, $result->trend);
@@ -61,8 +59,6 @@ class TrendMetricTest extends TestCase
 
     public function testCountByMonths()
     {
-        $this->range = DateRange::from(365);
-
         $metric = new class extends Trend
         {
             public function calculate(Request $request): Result

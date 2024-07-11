@@ -65,8 +65,6 @@ class ValueMetricTest extends TestCase
             'range' => 'MTD',
         ]));
 
-        $this->assertNotNull($result->metric->title);
-        $this->assertNotNull($result->metric->description);
         $this->assertEquals(100, $result->value);
         $this->assertEquals('#', $result->prefix);
         $this->assertEquals('users', $result->suffix);

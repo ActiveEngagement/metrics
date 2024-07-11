@@ -107,16 +107,6 @@ abstract class Value extends RangedMetric
     }
 
     /**
-     * Instantiate a Result using the given value.
-     *
-     * @return \Actengage\Metrics\Contracts\Result;
-     */
-    public function result(mixed $value): ResultInterface
-    {
-        return new ValueResult($this, $value);
-    }
-
-    /**
      * Return a value result showing the growth of a sum aggregate over time.
      *
      * @param  \Illuminate\Database\Eloquent\Builder|class-string<\Illuminate\Database\Eloquent\Model>  $model
@@ -127,5 +117,15 @@ abstract class Value extends RangedMetric
     public function sum($model, $column, $dateColumn = null)
     {
         return $this->aggregate($model, 'sum', $column, $dateColumn);
+    }
+
+    /**
+     * Instantiate a Result using the given value.
+     *
+     * @return \Actengage\Metrics\Contracts\Result;
+     */
+    public function result(mixed $value): ResultInterface
+    {
+        return new ValueResult($value);
     }
 }

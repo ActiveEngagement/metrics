@@ -2,19 +2,12 @@
 
 namespace Actengage\Metrics\Results;
 
-use Actengage\Metrics\RangedResult;
+use Actengage\Metrics\Contracts\Result;
 use Actengage\Metrics\TransformsResults;
 
-class ValueResult extends RangedResult
+class ValueResult implements Result
 {
     use TransformsResults;
-
-    // /**
-    //  * The metric value formatting.
-    //  *
-    //  * @var string|null
-    //  */
-    // public ?string $format = null;
 
     /**
      * The value of the result.
@@ -31,13 +24,6 @@ class ValueResult extends RangedResult
      */
     public mixed $previous = null;
 
-    // /**
-    //  * The previous value label.
-    //  *
-    //  * @var string
-    //  */
-    // public ?string $previousLabel = null;
-
     /**
      * The metric value suffix.
      */
@@ -48,18 +34,16 @@ class ValueResult extends RangedResult
      */
     public bool $zeroResult = false;
 
-    // /**
-    //  * Set the metric value formatting.
-    //  *
-    //  * @param string $format
-    //  * @return $this
-    //  */
-    // public function format($format): static
-    // {
-    //     $this->format = $format;
-
-    //     return $this;
-    // }
+    /**
+     * Create a new value result instance.
+     *
+     * @param  int|float|numeric-string|null  $value
+     * @return void
+     */
+    public function __construct($value)
+    {
+        $this->value = $value;
+    }
 
     /**
      * Indicate that the metric represents a currency value.
@@ -160,17 +144,14 @@ class ValueResult extends RangedResult
      */
     public function jsonSerialize(): array
     {
-        return array_merge([
+        return [
             'value' => $this->resolveTransformedValue($this->value),
             'previous' => $this->resolveTransformedValue($this->previous),
             'percent_changed' => $percentChanged = $this->percentChanged(),
             'positive_change' => $percentChanged >= 0,
-            // 'previousLabel' => $this->previousLabel,
             'prefix' => $this->prefix,
             'suffix' => $this->suffix,
-            // 'suffixInflection' => $this->suffixInflection,
-            // 'format' => $this->format,
             'zero_result' => $this->zeroResult,
-        ], parent::jsonSerialize());
+        ];
     }
 }

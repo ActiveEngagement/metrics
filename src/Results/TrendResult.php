@@ -2,19 +2,19 @@
 
 namespace Actengage\Metrics\Results;
 
-use Actengage\Metrics\RangedResult;
+use Actengage\Metrics\Contracts\Result;
 use Actengage\Metrics\TransformsResults;
 
-class TrendResult extends RangedResult
+class TrendResult implements Result
 {
     use TransformsResults;
 
-    // /**
-    //  * The metric value formatting.
-    //  *
-    //  * @var string|null
-    //  */
-    // public ?string $format = null;
+    /**
+     * The value of the result.
+     *
+     * @var int|float|numeric-string|null
+     */
+    public $value;
 
     /**
      * The metric value prefix.
@@ -26,13 +26,6 @@ class TrendResult extends RangedResult
      */
     public array $trend = [];
 
-    // /**
-    //  * The previous value label.
-    //  *
-    //  * @var string
-    //  */
-    // public ?string $previousLabel = null;
-
     /**
      * The metric value suffix.
      */
@@ -43,18 +36,16 @@ class TrendResult extends RangedResult
      */
     public bool $zeroResult = false;
 
-    // /**
-    //  * Set the metric value formatting.
-    //  *
-    //  * @param string $format
-    //  * @return $this
-    //  */
-    // public function format($format): static
-    // {
-    //     $this->format = $format;
-
-    //     return $this;
-    // }
+    /**
+     * Create a new trend result instance.
+     *
+     * @param  int|float|numeric-string|null  $value
+     * @return void
+     */
+    public function __construct($value = null)
+    {
+        $this->value = $value;
+    }
 
     /**
      * Indicate that the metric represents a currency value.
@@ -124,16 +115,13 @@ class TrendResult extends RangedResult
      */
     public function jsonSerialize(): array
     {
-        return array_merge([
+        return [
             'value' => $this->resolveTransformedValue($this->value),
             'trend' => collect($this->trend)->transform(function ($value) {
                 return $this->resolveTransformedValue($value);
             })->all(),
-            // 'previousLabel' => $this->previousLabel,
             'prefix' => $this->prefix,
-            'suffix' => $this->suffix,
-            // 'suffixInflection' => $this->suffixInflection,
-            // 'format' => $this->format,
-        ], parent::jsonSerialize());
+            'suffix' => $this->suffix
+        ];
     }
 }

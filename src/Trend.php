@@ -500,7 +500,7 @@ abstract class Trend extends RangedMetric
      */
     public function result($value = null): ResultInterface
     {
-        return new TrendResult($this, $value);
+        return new TrendResult($value);
     }
 
     /**
